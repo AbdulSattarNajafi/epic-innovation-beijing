@@ -27,16 +27,16 @@ function closeMenu() {
 }
 
 // Show & Hide Button Scroll to Top
-// const btnUp = document.querySelector('.btn-up');
+const btnUp = document.querySelector('.scroll-up');
 const header = document.querySelector('.header');
 window.onscroll = function () {
   const windowHeight = window.innerHeight;
 
-  // if (window.scrollY > 2 * windowHeight) {
-  //     btnUp.classList.add('show');
-  // } else {
-  //     btnUp.classList.remove('show');
-  // }
+  if (window.scrollY > 1.5 * windowHeight) {
+    btnUp.classList.add('show');
+  } else {
+    btnUp.classList.remove('show');
+  }
 
   if (window.scrollY >= 20) {
     header.classList.add('expand');
@@ -84,7 +84,9 @@ observer.observe(workshopSection);
 // ===================== Timer
 const items = document.querySelectorAll('.timer__item-time');
 
+// ============= Adjust the time based on the Event
 const dateString = '2024-09-13 12:00:00 GMT+0800';
+
 const [datePart, timePart, timeZone] = dateString.split(' ');
 const [year, month, day] = datePart.split('-').map(Number);
 const [hours, minutes, seconds] = timePart.split(':').map(Number);
@@ -147,3 +149,39 @@ function getRemainingTime() {
 let countdown = setInterval(getRemainingTime, 1000);
 //invoking the function after interval
 getRemainingTime();
+
+// ================= FAQ
+const accordionItems = document.querySelectorAll('.faq__item');
+const activeAccordion = document.querySelector('.faq__item.active .faq__item-texts');
+activeAccordion.style.maxHeight = activeAccordion.scrollHeight + 'px';
+
+accordionItems.forEach((item) => {
+  const header = item.querySelector('.faq__item-header');
+  header.addEventListener('click', () => {
+    toggleAccordion(item);
+  });
+});
+
+function toggleAccordion(accordionItem) {
+  const content = accordionItem.querySelector('.faq__item-texts');
+  const isActive = accordionItem.classList.contains('active');
+
+  // Close other accordion items
+  const allAccordionItems = document.querySelectorAll('.faq__item');
+  allAccordionItems.forEach((item) => {
+    if (item !== accordionItem) {
+      item.classList.remove('active');
+      item.querySelector('.faq__item-texts').style.maxHeight = null;
+    }
+  });
+
+  if (!isActive) {
+    // If content is closed, open it
+    accordionItem.classList.add('active');
+    content.style.maxHeight = content.scrollHeight + 'px';
+  } else {
+    // If content is open, close it
+    accordionItem.classList.remove('active');
+    content.style.maxHeight = null;
+  }
+}
